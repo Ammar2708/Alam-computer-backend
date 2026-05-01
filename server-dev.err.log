@@ -1,0 +1,19 @@
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2204) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+MongoServerSelectionError: getaddrinfo ENOTFOUND ac-wdu0fgk-shard-00-02.ovbtwp5.mongodb.net
+    at Topology.selectServer (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\sdam\topology.js:347:38)
+    at async tryOperation (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async Collection.findOne (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\collection.js:313:24)
+    at async model.Query._findOne (C:\Users\ABC\Desktop\eco\server\node_modules\mongoose\lib\query.js:2731:15)
+    at async model.Query.exec (C:\Users\ABC\Desktop\eco\server\node_modules\mongoose\lib\query.js:4726:63)

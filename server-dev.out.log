@@ -1,0 +1,60 @@
+
+> server@1.0.0 dev
+> nodemon app.js
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node app.js`[39m
+◇ injected env (6) from .env // tip: ⌘ override existing { override: true }
+Server is running on port 3000
+Connected to MongoDB
+MongoServerSelectionError: getaddrinfo ENOTFOUND ac-wdu0fgk-shard-00-02.ovbtwp5.mongodb.net
+    at Topology.selectServer (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\sdam\topology.js:347:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7)
+    at async tryOperation (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'ReplicaSetNoPrimary',
+    servers: Map(3) {
+      'ac-wdu0fgk-shard-00-02.ovbtwp5.mongodb.net:27017' => [ServerDescription],
+      'ac-wdu0fgk-shard-00-00.ovbtwp5.mongodb.net:27017' => [ServerDescription],
+      'ac-wdu0fgk-shard-00-01.ovbtwp5.mongodb.net:27017' => [ServerDescription]
+    },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: 'atlas-4venhs-shard-0',
+    maxElectionId: new ObjectId('7fffffff0000000000000258'),
+    maxSetVersion: 189,
+    commonWireVersion: 25,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  [cause]: MongoNetworkError: getaddrinfo ENOTFOUND ac-wdu0fgk-shard-00-02.ovbtwp5.mongodb.net
+      at TLSSocket.<anonymous> (C:\Users\ABC\Desktop\eco\server\node_modules\mongodb\lib\cmap\connect.js:313:44)
+      at Object.onceWrapper (node:events:634:26)
+      at TLSSocket.emit (node:events:519:28)
+      at emitErrorNT (node:internal/streams/destroy:170:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    errorLabelSet: Set(3) { 'SystemOverloadedError', 'RetryableError', 'ResetPool' },
+    beforeHandshake: false,
+    [cause]: Error: getaddrinfo ENOTFOUND ac-wdu0fgk-shard-00-02.ovbtwp5.mongodb.net
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'ac-wdu0fgk-shard-00-02.ovbtwp5.mongodb.net'
+    }
+  }
+}
