@@ -58,6 +58,20 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Alam Computer API is running",
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Backend is live",
+  });
+});
+
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductRouter);
@@ -71,6 +85,10 @@ app.use("/api/shop/orders", shopOrderRouter);
 app.use("/api", checkoutSettingsRouter);
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
