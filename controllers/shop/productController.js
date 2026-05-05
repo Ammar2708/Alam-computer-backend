@@ -1,6 +1,23 @@
 import Product from "../../models/Product.js";
 
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const searchableProductFields = ["title", "description", "category", "brand"];
+
+const buildSearchConditions = (searchTerm) => {
+  return searchTerm
+    .split(/\s+/)
+    .map((term) => term.trim())
+    .filter(Boolean)
+    .map((term) => {
+      const searchRegex = new RegExp(escapeRegex(term), "i");
+
+      return {
+        $or: searchableProductFields.map((field) => ({
+          [field]: searchRegex,
+        })),
+      };
+    });
+};
 
 const getFilterProducts = async (req, res) => {
   try {
@@ -23,13 +40,7 @@ const getFilterProducts = async (req, res) => {
     const searchTerm = search.trim();
 
     if (searchTerm) {
-      const searchRegex = new RegExp(escapeRegex(searchTerm), "i");
-      filters.$or = [
-        { title: searchRegex },
-        { description: searchRegex },
-        { category: searchRegex },
-        { brand: searchRegex },
-      ];
+      filters.$and = buildSearchConditions(searchTerm);
     }
 
     let sort = {};

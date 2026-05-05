@@ -1,5 +1,6 @@
 import Cart from '../../models/Cart.js';
 import Order from '../../models/Order.js';
+import { getOrCreateCheckoutSettings } from '../settings/checkout-settings-controller.js';
 
 const normalizeCartItems = (items = []) =>
     items
@@ -73,10 +74,13 @@ const createOrder = async (req, res) => {
             });
         }
 
-        const totalAmount = orderItems.reduce(
+        const subtotalAmount = orderItems.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
         );
+        const checkoutSettings = await getOrCreateCheckoutSettings();
+        const deliveryCharge = Math.max(0, Number(checkoutSettings?.deliveryCharge) || 0);
+        const totalAmount = subtotalAmount + deliveryCharge;
 
         const order = await Order.create({
             userId,
@@ -90,6 +94,8 @@ const createOrder = async (req, res) => {
             paymentMethod,
             orderStatus: 'processing',
             items: orderItems,
+            subtotalAmount,
+            deliveryCharge,
             totalAmount,
         });
 

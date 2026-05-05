@@ -13,6 +13,7 @@ import popupRoutes from "./routes/auth/popup/popup-routes.js";
 import sliderRoutes from "./routes/auth/slider/slider-routes.js";
 import adminOrderRouter from "./routes/auth/admin/order-routes.js";
 import shopOrderRouter from "./routes/auth/shop/order-routes.js"; 
+import checkoutSettingsRouter from "./routes/auth/settings/checkout-settings-routes.js";
 
 
 dotenv.config();
@@ -26,11 +27,22 @@ mongoose
 // App
 const app = express();
 const PORT = process.env.PORT || 3000;
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim().replace(/\/$/, ""))
+  .filter(Boolean);
 
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",
@@ -56,6 +68,7 @@ app.use("/api", popupRoutes);
 app.use("/api/slider", sliderRoutes);
 app.use("/api/admin/orders", adminOrderRouter);
 app.use("/api/shop/orders", shopOrderRouter);
+app.use("/api", checkoutSettingsRouter);
 
 // Start server
 app.listen(PORT, () => {

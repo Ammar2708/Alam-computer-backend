@@ -2,6 +2,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
+const isProduction = process.env.NODE_ENV === "production";
+const authCookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+};
 
 const registerUser = async (req, res) => {
     const { username, email, password } = req.body;
@@ -40,16 +47,13 @@ const loginUser = async (req, res) => {
         }
         const token = jwt.sign(
             {id: user._id, role: user.role, email: user.email},
-            "secret",
+            JWT_SECRET,
             {
                 expiresIn: "1d",
             }
         );
             res
-            .cookie("token", token, {
-                httpOnly: true,
-                secure: true,
-            })
+            .cookie("token", token, authCookieOptions)
             .status(200)
             .json({ 
                 success: true,
@@ -71,7 +75,7 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
     res
-    .clearCookie("token")
+    .clearCookie("token", authCookieOptions)
     .status(200)
     .json({
         success: true,
@@ -86,7 +90,7 @@ const authMiddleware = (req, res, next) => {
              message: "Unauthorized" });
     }
     try {
-        const decoded = jwt.verify(token, "secret");
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.user = decoded;
         next();
     } catch (error) {
