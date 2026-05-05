@@ -27,6 +27,7 @@ mongoose
 // App
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
   .map((origin) => origin.trim().replace(/\/$/, ""))
@@ -86,8 +87,8 @@ app.use("/api", checkoutSettingsRouter);
 
 // Start server
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
   });
 }
 
