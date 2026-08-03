@@ -17,7 +17,7 @@ const getOrCreateCheckoutSettings = async () => {
     { key: CHECKOUT_SETTINGS_KEY },
     { $setOnInsert: { key: CHECKOUT_SETTINGS_KEY, deliveryCharge: 0 } },
     {
-      new: true,
+      returnDocument: "after",
       upsert: true,
       runValidators: true,
       setDefaultsOnInsert: true,
@@ -64,7 +64,7 @@ const updateCheckoutSettings = async (req, res) => {
         },
       },
       {
-        new: true,
+        returnDocument: "after",
         upsert: true,
         runValidators: true,
         setDefaultsOnInsert: true,

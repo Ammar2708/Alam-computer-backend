@@ -2,6 +2,8 @@
 import Product from "../../models/Product.js";
 import { imageUploadUtil } from "../../helpers/cloudinary.js";
 
+const hiddenProductCategories = ["HDD"];
+
 const normalizeProductImages = (image, images = []) => {
   const normalizedImages = Array.isArray(images)
     ? images
@@ -61,6 +63,13 @@ const addProduct=async(req,res)=>{
 
   const productImages = normalizeProductImages(image, images);
 
+  if (hiddenProductCategories.includes(category)) {
+    return res.status(400).json({
+      success: false,
+      message: "Product category is no longer available",
+    });
+  }
+
   const newlyCreatedProdut=new Product({
     title,
     description,
@@ -96,7 +105,9 @@ const addProduct=async(req,res)=>{
 //get all products
 const fetchAllProducts=async(req,res)=>{
   try{
-    const listOfProducts=await Product.find()
+    const listOfProducts=await Product.find({
+      category: { $nin: hiddenProductCategories },
+    })
     res.status(200).json({
       success:true,
       data:listOfProducts
@@ -131,13 +142,21 @@ const editProduct=async(req,res)=>{
     }=req.body
 
     const productImages = normalizeProductImages(image, images);
+
+    if (hiddenProductCategories.includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: "Product category is no longer available",
+      });
+    }
+
     const updatePayload = {
       ...req.body,
       image: productImages[0],
       images: productImages,
     };
 
-    const updatedProduct=await Product.findByIdAndUpdate(req.params.id,updatePayload,{new:true})
+    const updatedProduct=await Product.findByIdAndUpdate(req.params.id, updatePayload, { returnDocument: "after" })
     if(!updatedProduct){
       return res.status(404).json({
         success:false,

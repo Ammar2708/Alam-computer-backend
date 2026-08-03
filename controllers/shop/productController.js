@@ -1,5 +1,6 @@
 import Product from "../../models/Product.js";
 
+const hiddenProductCategories = ["HDD"];
 const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const searchableProductFields = ["title", "description", "category", "brand"];
 
@@ -27,10 +28,17 @@ const getFilterProducts = async (req, res) => {
       search = "",
       sortBy = "price-lowtohigh",
     } = req.query;
-    let filters = {};
+    let filters = {
+      category: { $nin: hiddenProductCategories },
+    };
 
     if (category.length) {
-      filters.category = { $in: category.split(",") };
+      const selectedCategories = category
+        .split(",")
+        .filter(Boolean)
+        .filter((item) => !hiddenProductCategories.includes(item));
+
+      filters.category.$in = selectedCategories;
     }
 
     if (brand.length) {
@@ -78,7 +86,7 @@ const getFilterProducts = async (req, res) => {
 const getProductDetails=async(req,res)=>{
   try{
     const product=await Product.findById(req.params.id)
-    if(!product){
+    if(!product || hiddenProductCategories.includes(product.category)){
       return res.status(404).json({
         success:false,
         message:"Product not found"

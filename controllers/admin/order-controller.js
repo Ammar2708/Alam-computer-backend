@@ -36,7 +36,7 @@ const updateOrderStatus = async (req, res) => {
     const updatedOrder = await Order.findByIdAndUpdate(
       id,
       { orderStatus },
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     ).populate('userId', 'username email');
 
     if (!updatedOrder) {

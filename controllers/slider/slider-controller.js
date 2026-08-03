@@ -114,7 +114,7 @@ export const updateSlider = async (req, res) => {
     const { id } = req.params;
 
     const updatedSlider = await Slider.findByIdAndUpdate(id, req.body, {
-      new: true,
+      returnDocument: "after",
       runValidators: true,
     });
 

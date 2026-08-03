@@ -91,7 +91,7 @@ export const updatePopup = async (req, res) => {
     const { id } = req.params;
 
     const popup = await PopupDeal.findByIdAndUpdate(id, req.body, {
-      new: true,
+      returnDocument: "after",
       runValidators: true,
     });
 
