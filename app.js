@@ -14,6 +14,7 @@ import sliderRoutes from "./routes/auth/slider/slider-routes.js";
 import adminOrderRouter from "./routes/auth/admin/order-routes.js";
 import shopOrderRouter from "./routes/auth/shop/order-routes.js"; 
 import checkoutSettingsRouter from "./routes/auth/settings/checkout-settings-routes.js";
+import assistantRouter from "./routes/auth/assistant/assistant-routes.js";
 
 
 dotenv.config();
@@ -84,6 +85,7 @@ app.use("/api/slider", sliderRoutes);
 app.use("/api/admin/orders", adminOrderRouter);
 app.use("/api/shop/orders", shopOrderRouter);
 app.use("/api", checkoutSettingsRouter);
+app.use("/api", assistantRouter);
 
 // Start server
 if (!process.env.VERCEL) {
