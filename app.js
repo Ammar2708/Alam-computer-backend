@@ -35,7 +35,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 const serverDir = path.dirname(fileURLToPath(import.meta.url));
-const clientDist = path.resolve(serverDir, "../client/dist/client");
+const clientDist = path.resolve(serverDir, "../client/dist");
 const ssrEntry = path.resolve(serverDir, "../client/dist/server/entry-server.js");
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
@@ -141,7 +141,10 @@ app.use(async (req, res, next) => {
     const jsonLd = structuredData({ origin, pathname: url.pathname, product })
       .map((data) => `<script type="application/ld+json">${serialize(data)}</script>`).join("\n");
     const stateScript = `<script>window.__PRELOADED_STATE__=${serialize(rendered.state)}</script>`;
-    const html = template
+    const routeTemplate = template
+      .replace(/<title>Alam Computer – Computer Sales, Repair &amp; Spare Parts in Sharjah, UAE<\/title>/, "")
+      .replace(/<meta name="description" content="Alam Computer in Sharjah offers computer &amp; printer sales, repair, and spare parts\. Trusted locally for 15\+ years\. Visit us in Industrial Area 3, Sharjah, or call \+971-5-57112599\."\s*\/>/, "");
+    const html = routeTemplate
       .replace("<!--app-head-->", `${helmetMarkup}\n${jsonLd}`)
       .replace("<!--app-html-->", rendered.html)
       .replace("<!--app-state-->", stateScript);

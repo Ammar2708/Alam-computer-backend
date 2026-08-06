@@ -43,9 +43,11 @@ export async function getSsrData(url) {
 
 export function structuredData({ origin, pathname, product }) {
   const organization = {
-    "@context": "https://schema.org", "@type": "Organization", name: "Alam Computer",
-    url: origin, logo: `${origin}/logo1.webp`,
-    contactPoint: { "@type": "ContactPoint", contactType: "customer service", telephone: process.env.STORE_PHONE || "+971-00-000-0000" },
+    "@context": "https://schema.org", "@type": "ComputerStore", name: "Alam Computer",
+    alternateName: "Intidhar Alam Computer", url: origin, image: `${origin}/logo1.webp`,
+    telephone: process.env.STORE_PHONE || "+971557112599", priceRange: "$$",
+    address: { "@type": "PostalAddress", streetAddress: "Industrial Area 3", addressLocality: "Sharjah", addressCountry: "AE" },
+    geo: { "@type": "GeoCoordinates", latitude: 25.316147, longitude: 55.415842 },
   };
   const blocks = [organization];
   const categorySlug = pathname.split("/").filter(Boolean)[0];
