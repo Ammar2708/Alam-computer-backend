@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "build": "npm --prefix ../client run build:ssr",
+    "build": "node --check app.js && node --check api/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js"
   },
