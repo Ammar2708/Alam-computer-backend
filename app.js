@@ -40,7 +40,7 @@ const ssrEntry = path.resolve(serverDir, "../client/dist/server/entry-server.js"
 // The API is deployed separately from the storefront. Enable SSR only when a
 // storefront build is intentionally deployed with this server.
 const serveStorefront = process.env.ENABLE_STOREFRONT_SSR === "true";
-const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173,https://alamcomputer.com,https://www.alamcomputer.com")
   .split(",")
   .map((origin) => origin.trim().replace(/\/$/, ""))
   .filter(Boolean);
