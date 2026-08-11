@@ -37,6 +37,9 @@ const HOST = process.env.HOST || "0.0.0.0";
 const serverDir = path.dirname(fileURLToPath(import.meta.url));
 const clientDist = path.resolve(serverDir, "../client/dist");
 const ssrEntry = path.resolve(serverDir, "../client/dist/server/entry-server.js");
+// The API is deployed separately from the storefront. Enable SSR only when a
+// storefront build is intentionally deployed with this server.
+const serveStorefront = process.env.ENABLE_STOREFRONT_SSR === "true";
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
   .map((origin) => origin.trim().replace(/\/$/, ""))
@@ -73,6 +76,13 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Backend is live",
+  });
+});
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Alam Computer API is running",
   });
 });
 
@@ -126,7 +136,7 @@ app.use(express.static(clientDist, { maxAge: "1d", index: false }));
 const serialize = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 
 app.use(async (req, res, next) => {
-  if (req.method !== "GET" || req.path.startsWith("/api/")) return next();
+  if (!serveStorefront || req.method !== "GET" || req.path.startsWith("/api/")) return next();
   try {
     const [template, ssrModule] = await Promise.all([
       fs.readFile(path.join(clientDist, "index.html"), "utf8"),
