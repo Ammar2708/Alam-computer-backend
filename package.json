@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "build": "mkdir -p dist && echo \"build ok\" > dist/index.html",
+    "build": "echo Build complete",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js"
   },
