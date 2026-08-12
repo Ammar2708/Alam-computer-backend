@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -20,15 +19,10 @@ import shopOrderRouter from "./routes/auth/shop/order-routes.js";
 import checkoutSettingsRouter from "./routes/auth/settings/checkout-settings-routes.js";
 import assistantRouter from "./routes/auth/assistant/assistant-routes.js";
 import { categorySlugMap, getSitemap, getSsrData, structuredData } from "./services/seo.js";
+import { connectDatabase } from "./config/database.js";
 
 
 dotenv.config();
-
-// DB connection
-mongoose
-  .connect(process.env.MONGO_DB)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.log(err));
 
 // App
 const app = express();
@@ -72,11 +66,19 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(compression());
 
-app.get("/api/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Backend is live",
-  });
+app.get("/api/health", async (req, res) => {
+  try {
+    await connectDatabase();
+    res.status(200).json({
+      success: true,
+      message: "Backend and database are live",
+    });
+  } catch (error) {
+    res.status(503).json({
+      success: false,
+      message: "Backend is live but the database is unavailable",
+    });
+  }
 });
 
 app.get("/", (req, res) => {
@@ -84,6 +86,22 @@ app.get("/", (req, res) => {
     success: true,
     message: "Alam Computer API is running",
   });
+});
+
+// Do not let database-backed routes run until MongoDB is ready. Previously a
+// cold serverless request could query before `mongoose.connect()` completed,
+// returning 500 errors and leaving the storefront without products.
+app.use("/api", async (req, res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    res.status(503).json({
+      success: false,
+      message: "The product service is temporarily unavailable. Please try again shortly.",
+    });
+  }
 });
 
 // Routes
