@@ -38,11 +38,18 @@ const getFilterProducts = async (req, res) => {
         .filter(Boolean)
         .filter((item) => !hiddenProductCategories.includes(item));
 
-      filters.category.$in = selectedCategories;
+      filters.category.$in = selectedCategories.map(
+        (item) => new RegExp(`^${escapeRegex(item.trim())}$`, "i"),
+      );
     }
 
     if (brand.length) {
-      filters.brand = { $in: brand.split(",") };
+      filters.brand = {
+        $in: brand
+          .split(",")
+          .filter(Boolean)
+          .map((item) => new RegExp(`^${escapeRegex(item.trim())}$`, "i")),
+      };
     }
 
     const searchTerm = search.trim();
