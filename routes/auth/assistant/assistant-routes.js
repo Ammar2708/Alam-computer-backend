@@ -5,7 +5,7 @@ const router = express.Router();
 const requestsByIp = new Map();
 
 const STORE_DETAILS = `Alam Computer is a technology store in Industrial Area 3, Sharjah, UAE.
-Phone: +971 557112599. Email: alamcomputeruae@gmail.com.
+Phone: 0528036944. Email: alamcomputeruae@gmail.com.
 The store sells laptops, monitors, printers, ink, network equipment, all-in-one computers, toners, storage, and accessories.`;
 
 const getTextFromResponse = (response) =>

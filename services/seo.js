@@ -45,7 +45,7 @@ export function structuredData({ origin, pathname, product }) {
   const organization = {
     "@context": "https://schema.org", "@type": "ComputerStore", name: "Alam Computer",
     alternateName: "Intidhar Alam Computer", url: origin, image: `${origin}/logo1.webp`,
-    telephone: process.env.STORE_PHONE || "+971557112599", priceRange: "$$",
+    telephone: process.env.STORE_PHONE || "0528036944", priceRange: "$$",
     address: { "@type": "PostalAddress", streetAddress: "Industrial Area 3", addressLocality: "Sharjah", addressCountry: "AE" },
     geo: { "@type": "GeoCoordinates", latitude: 25.316147, longitude: 55.415842 },
   };

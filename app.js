@@ -171,7 +171,7 @@ app.use(async (req, res, next) => {
     const stateScript = `<script>window.__PRELOADED_STATE__=${serialize(rendered.state)}</script>`;
     const routeTemplate = template
       .replace(/<title>Alam Computer – Computer Sales, Repair &amp; Spare Parts in Sharjah, UAE<\/title>/, "")
-      .replace(/<meta name="description" content="Alam Computer in Sharjah offers computer &amp; printer sales, repair, and spare parts\. Trusted locally for 15\+ years\. Visit us in Industrial Area 3, Sharjah, or call \+971-5-57112599\."\s*\/>/, "");
+      .replace(/<meta name="description" content="Alam Computer in Sharjah offers computer &amp; printer sales, repair, and spare parts\. Trusted locally for 15\+ years\. Visit us in Industrial Area 3, Sharjah, or call 0528036944\."\s*\/>/, "");
     const html = routeTemplate
       .replace("<!--app-head-->", `${helmetMarkup}\n${jsonLd}`)
       .replace("<!--app-html-->", rendered.html)
