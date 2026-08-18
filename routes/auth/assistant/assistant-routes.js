@@ -8,6 +8,24 @@ const STORE_DETAILS = `Alam Computer is a technology store in Industrial Area 3,
 Phone: 0528036944. Email: alamcomputeruae@gmail.com.
 The store sells laptops, monitors, printers, ink, network equipment, all-in-one computers, toners, storage, and accessories.`;
 
+const PRODUCT_TYPE_RULES = [
+  { category: "Laptop", terms: ["laptop", "laptops", "notebook", "notebooks"] },
+  { category: "Printer", terms: ["printer", "printers", "laserjet"] },
+  { category: "Lcd", terms: ["monitor", "monitors", "display", "displays", "lcd"] },
+  { category: "Ink", terms: ["ink", "inks", "cartridge", "cartridges"] },
+  { category: "Towner", terms: ["toner", "toners"] },
+  { category: "SSD", terms: ["ssd", "storage", "hard drive", "hard drives"] },
+  { category: "Network", terms: ["network", "networking", "router", "routers", "switch", "switches"] },
+  { category: "All In One", terms: ["all in one", "all-in-one", "aio computer", "aio pc"] },
+];
+
+const getRequestedCategory = (text = "") => {
+  const normalized = ` ${text.toLowerCase().replace(/[^a-z0-9-]+/g, " ")} `;
+  return PRODUCT_TYPE_RULES.find(({ terms }) =>
+    terms.some((term) => normalized.includes(` ${term} `))
+  )?.category;
+};
+
 const getTextFromResponse = (response) =>
   response?.output
     ?.flatMap((item) => item?.content || [])
@@ -51,7 +69,12 @@ router.post("/assistant/chat", async (req, res) => {
       .limit(80)
       .lean();
 
-    const catalog = products.map((product) => ({
+    const requestedCategory = getRequestedCategory(messages.at(-1).content);
+    const relevantProducts = requestedCategory
+      ? products.filter((product) => product.category?.trim().toLowerCase() === requestedCategory.toLowerCase())
+      : products;
+
+    const catalog = relevantProducts.map((product) => ({
       id: String(product._id),
       title: product.title,
       brand: product.brand,
@@ -74,7 +97,7 @@ router.post("/assistant/chat", async (req, res) => {
         max_output_tokens: 350,
         instructions: `${STORE_DETAILS}
 
-You are Alam Assistant, a professional customer shopping assistant. Answer naturally in the customer's language. Be concise, friendly, and practical. Use only the supplied catalog and store details for factual store claims. Never invent stock, prices, specifications, policies, discounts, delivery times, or warranties. When recommending products, mention at most three exact catalog titles and briefly explain why. If information is unavailable, say so and direct the customer to call the store. Do not ask for passwords, card details, or other sensitive data.
+You are Alam Assistant, a professional customer shopping assistant. Answer naturally in the customer's language. Be concise, friendly, and practical. Use only the supplied catalog and store details for factual store claims. Never invent stock, prices, specifications, policies, discounts, delivery times, or warranties. A requested product type is a strict requirement: never recommend a different category merely because its description contains the requested word. When recommending products, mention at most three exact catalog titles and briefly explain why. If no supplied product matches the requested type, clearly say that no matching product is available and do not offer unrelated products. If information is unavailable, say so and direct the customer to call the store. Do not ask for passwords, card details, or other sensitive data.
 
 Current catalog JSON:
 ${JSON.stringify(catalog)}`,
